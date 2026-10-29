@@ -1,0 +1,14 @@
+const fs = require('fs');
+const imported = JSON.parse(fs.readFileSync('workflow-reserva-por-id.json', 'utf8'));
+const wf = Array.isArray(imported) ? imported[0] : imported;
+const node = (name) => wf.nodes.find((n) => n.name === name);
+const memoria = {};
+const runParser = new Function('$json', '$getWorkflowStaticData', node('Interpretar mensaje Meta').parameters.jsCode);
+const event = { body: { entry: [{ changes: [{ value: { contacts: [{ profile: { name: 'Prueba' } }], messages: [{ id: 'id-reserva-prueba', timestamp: String(Math.floor(Date.now()/1000)), from: '59170000000', type: 'text', text: { body: '11' } }] } }] }] } };
+const parsed = runParser(event, () => memoria)[0].json;
+const runFind = new Function('$input', '$', node('Buscar producto para reserva').parameters.jsCode);
+const products = [{json:{'IDENTIFICACIÓN':11,Marca:'ZTE',Modelo:'desing',Precio:1000,Stock:3}}];
+const found = runFind({all:()=>products}, () => ({first:()=>({json:parsed})}))[0].json;
+const runPrepare = new Function('$json', node('Preparar reserva').parameters.jsCode);
+const prepared = runPrepare(found)[0].json;
+console.log(JSON.stringify({intent:parsed.intent,reservaId:parsed.reservaId,encontrado:found.reserva,estado:prepared.estado,confirmacion:prepared.respuesta_final},null,2));

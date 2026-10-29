@@ -1,0 +1,15 @@
+const fs = require('fs');
+const imported = JSON.parse(fs.readFileSync('workflow-con-reservas.json', 'utf8'));
+const wf = Array.isArray(imported) ? imported[0] : imported;
+const node = (name) => wf.nodes.find((n) => n.name === name);
+const memoria = {};
+const solicitud = { cliente: 'Prueba', producto: 'Samsung A27', presupuesto: 0, wa_from: '59170000000' };
+const products = [{ json: { 'IDENTIFICACIÓN': 13, Marca: 'Samsung', Modelo: 'A27', Precio: 4000, Stock: 2 } }];
+const runSearch = new Function('$input', '$', '$getWorkflowStaticData', node('Code in JavaScript').parameters.jsCode);
+const resultSearch = runSearch({ all: () => products }, () => ({ first: () => ({ json: solicitud }) }), () => memoria);
+const runParser = new Function('$json', '$getWorkflowStaticData', node('Interpretar mensaje Meta').parameters.jsCode);
+const event = { body: { entry: [{ changes: [{ value: { contacts: [{ profile: { name: 'Prueba' } }], messages: [{ id: 'prueba-reserva-001', timestamp: String(Math.floor(Date.now()/1000)), from: '59170000000', type: 'text', text: { body: 'Quiero reservarlo' } }] } }] }] } };
+const resultParser = runParser(event, () => memoria);
+const runPrepare = new Function('$json', node('Preparar reserva').parameters.jsCode);
+const resultPrepare = runPrepare(resultParser[0].json);
+console.log(JSON.stringify({estadoBusqueda:resultSearch[0].json.estado,ofertaGuardada:memoria.ultimaOfertaPorCliente['59170000000'],intent:resultParser[0].json.intent,estadoReserva:resultPrepare[0].json.estado,textoConfirmacion:resultPrepare[0].json.respuesta_final},null,2));
