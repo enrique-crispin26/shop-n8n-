@@ -1,29 +1,12 @@
-# Tienda de celulares con React
+# Tienda de celulares con n8n 
 
-Esta es una aplicación web tipo prototipo para administrar una tienda de celulares. Cubre los módulos que pediste: clientes, productos, pedidos, pagos, delivery, administrador y reportes.
+Desarrollé un workflow de automatización para gestionar consultas de clientes mediante WhatsApp. El sistema recibe mensajes a través de un webhook de Meta, procesa la solicitud y consulta un catálogo de productos almacenado en Google Sheets.
 
-## Tecnologías usadas
+Mediante JavaScript, normaliza los datos, filtra los productos disponibles y evalúa coincidencias considerando la búsqueda y el presupuesto del cliente.
 
-- React: construye la interfaz por componentes.
-- Vite: servidor de desarrollo rápido para proyectos React.
-- Lucide React: iconos limpios para botones, navegación y métricas.
-- CSS puro: estilos responsivos sin depender de frameworks pesados.
-- localStorage: guarda datos en el navegador mientras aprendes antes de usar backend.
+Posteriormente, utiliza un modelo de inteligencia artificial de OpenAI para generar respuestas comerciales claras y naturales basadas en la información obtenida. Finalmente, envía la respuesta al cliente y contempla el registro de consultas para su seguimient
 
-## Cómo ejecutar
 
-En PowerShell de Windows puede fallar `npm` por política de scripts. Por eso usa `npm.cmd`:
-
-```powershell
-npm.cmd install
-npm.cmd run dev
-```
-
-Luego abre la URL que muestre Vite, normalmente:
-
-```text
-http://localhost:5173/
-```
 
 ## Qué hace cada módulo
 
@@ -35,23 +18,9 @@ http://localhost:5173/
 - Administrador: gestiona inventario y agrega productos.
 - Reportes: calcula ventas, pedidos, pagos pendientes, stock bajo y gráficos simples.
 
-## Estructura del proyecto
 
-```text
-src/
-  App.jsx       Componentes principales y lógica de la app
-  data.js       Datos iniciales y funciones auxiliares
-  main.jsx      Punto de entrada de React
-  styles.css    Diseño visual y responsive
-```
 
-## Proceso recomendado para estudiar
 
-1. Ejecuta la app y prueba cada módulo.
-2. Abre `src/data.js` y cambia productos, clientes o precios.
-3. Revisa `src/App.jsx`: ahí verás cómo React usa `useState`, `useMemo` y eventos.
-4. Revisa `src/styles.css`: ahí están las grillas, tarjetas, tablas y diseño responsive.
-5. Cuando entiendas el frontend, el siguiente paso sería conectar un backend.
 
 ## Siguiente mejora profesional
 
